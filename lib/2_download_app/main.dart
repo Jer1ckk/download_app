@@ -5,6 +5,8 @@ import 'ui/screens/settings/settings_screen.dart';
 import 'ui/screens/downloads/downloads_screen.dart';
 import 'ui/theme/theme.dart';
 
+ThemeColorController themeColorController = ThemeColorController();
+
 void main() {
   runApp(const MyApp());
 }
@@ -19,7 +21,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _currentIndex = 1;
 
-  final List<Widget> _pages =  [DownloadsScreen(), SettingsScreen()];
+  final List<Widget> _pages = [DownloadsScreen(), SettingsScreen()];
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class _MyAppState extends State<MyApp> {
               _currentIndex = index;
             });
           },
-          selectedItemColor: currentThemeColor.color,
+          selectedItemColor: themeColorController.currentThemeColor.color,
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Downloads'),
             BottomNavigationBarItem(
