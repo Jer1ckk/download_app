@@ -1,6 +1,7 @@
-import 'package:download_app/2_download_app/main.dart';
 import 'package:download_app/2_download_app/ui/screens/downloads/widgets/download_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../providers/theme_color_provider.dart';
 import '../../theme/theme.dart';
 import 'widgets/download_controler.dart';
 
@@ -9,7 +10,7 @@ class DownloadsScreen extends StatelessWidget {
   final List<Ressource> ressources = [
     Ressource(name: "image1.png", size: 120),
     Ressource(name: "image1.png", size: 500),
-    Ressource(name: "image3.png", size: 12000),
+    Ressource(name: "image3.png", size: 1200),
   ];
 
   final List<DownloadController> controllers = [];
@@ -23,29 +24,26 @@ class DownloadsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: themeColorController,
-      builder: (BuildContext context, Widget? child) {
-        return Container(
-          color: themeColorController.currentThemeColor.backgroundColor,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 16),
-              Text(
-                "Downloads",
-                style: AppTextStyles.heading.copyWith(
-                  color: themeColorController.currentThemeColor.color,
-                ),
-              ),
+    ThemeColorNotifier colorNotifier = context.watch<ThemeColorNotifier>();
 
-              SizedBox(height: 50),
-
-              ...controllers.map((c) => DownloadTile(controller: c)),
-            ],
+    return Container(
+      color: colorNotifier.currentThemeColor.backgroundColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 16),
+          Text(
+            "Downloads",
+            style: AppTextStyles.heading.copyWith(
+              color: colorNotifier.currentThemeColor.color,
+            ),
           ),
-        );
-      },
+
+          SizedBox(height: 50),
+
+          ...controllers.map((c) => DownloadTile(controller: c)),
+        ],
+      ),
     );
   }
 }

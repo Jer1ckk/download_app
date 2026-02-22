@@ -1,5 +1,5 @@
-import 'package:download_app/2_download_app/main.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../providers/theme_color_provider.dart';
 import '../../theme/theme.dart';
@@ -10,50 +10,46 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: themeColorController,
-      builder: (BuildContext context, Widget? child) {
-        return Container(
-          color: themeColorController.currentThemeColor.backgroundColor,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 16),
-              Text(
-                "Settings",
-                style: AppTextStyles.heading.copyWith(
-                  color: themeColorController.currentThemeColor.color,
-                ),
-              ),
+    ThemeColorNotifier colorNotifier = context.watch<ThemeColorNotifier>();
 
-              SizedBox(height: 50),
-
-              Text(
-                "Theme",
-                style: AppTextStyles.label.copyWith(color: AppColors.textLight),
-              ),
-
-              SizedBox(height: 10),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: ThemeColor.values
-                    .map(
-                      (theme) => ThemeColorButton(
-                        themeColor: theme,
-                        isSelected:
-                            theme == themeColorController.currentThemeColor,
-                        onTap: (value) {
-                          themeColorController.currentThemeColor = value;
-                        },
-                      ),
-                    )
-                    .toList(),
-              ),
-            ],
+    return Container(
+      color: colorNotifier.currentThemeColor.backgroundColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 16),
+          Text(
+            "Settings",
+            style: AppTextStyles.heading.copyWith(
+              color: colorNotifier.currentThemeColor.color,
+            ),
           ),
-        );
-      },
+
+          SizedBox(height: 50),
+
+          Text(
+            "Theme",
+            style: AppTextStyles.label.copyWith(color: AppColors.textLight),
+          ),
+
+          SizedBox(height: 10),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: ThemeColor.values
+                .map(
+                  (theme) => ThemeColorButton(
+                    themeColor: theme,
+                    isSelected: theme == colorNotifier.currentThemeColor,
+                    onTap: (value) {
+                      colorNotifier.currentThemeColor = value;
+                    },
+                  ),
+                )
+                .toList(),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -13,7 +13,7 @@ enum ThemeColor {
 
 
 
-class ThemeColorController extends ChangeNotifier {
+class ThemeColorNotifier extends ChangeNotifier {
   ThemeColor _currentThemeColor = ThemeColor.blue;
 
   ThemeColor get currentThemeColor => _currentThemeColor;
