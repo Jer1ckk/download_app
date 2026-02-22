@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-
-final ColorController controller = ColorController();
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(body: Home()),
+      home: Scaffold(
+        body: ChangeNotifierProvider(
+          create: (context) => ColorCountNotifier(),
+          child: Home(),
+        ),
+      ),
     ),
   );
 }
@@ -14,7 +18,7 @@ void main() {
 enum CardType {
   red(Colors.red),
   blue(Colors.blue),
-  yellow(Colors.yellow),
+  purple(Colors.purple),
   green(Colors.green);
 
   final Color color;
@@ -61,23 +65,20 @@ class ColorTapsScreen extends StatelessWidget {
   const ColorTapsScreen({super.key});
   @override
   Widget build(BuildContext context) {
+    ColorCountNotifier notifier = context.watch<ColorCountNotifier>();
     return Scaffold(
       appBar: AppBar(title: Text('Color Taps')),
-      body: ListenableBuilder(
-        listenable: controller,
-        builder: (BuildContext context, Widget? child) {
-          return Column(
-            children:
-            [Text("${controller.total}"),
-            ...CardType.values.map((type) {
-              return ColorTap(
-                type: type,
-                tapCount: controller.getCount(type),
-                onTap: () => controller.increment(type),
-              );
-            })]
-          );
-        },
+      body: Column(
+        children: [
+          Text("${notifier.total}"),
+          ...CardType.values.map((type) {
+            return ColorTap(
+              type: type,
+              tapCount: notifier.getCount(type),
+              onTap: () => notifier.increment(type),
+            );
+          }),
+        ],
       ),
     );
   }
@@ -125,29 +126,26 @@ class StatisticsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ColorCountNotifier notifier = context.watch<ColorCountNotifier>();
+
     return Scaffold(
       appBar: AppBar(title: Text('Statistics')),
       body: Center(
-        child: ListenableBuilder(
-          listenable: controller,
-          builder: (BuildContext context, Widget? child) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: CardType.values.map((type) {
-                return Text(
-                  'Number of ${type.name} = ${controller.allCount[type]}',
-                  style: const TextStyle(fontSize: 24),
-                );
-              }).toList(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: CardType.values.map((type) {
+            return Text(
+              'Number of ${type.name} = ${notifier.allCount[type]}',
+              style: const TextStyle(fontSize: 24),
             );
-          },
+          }).toList(),
         ),
       ),
     );
   }
 }
 
-class ColorController extends ChangeNotifier {
+class ColorCountNotifier extends ChangeNotifier {
   final Map<CardType, int> _tapCounts = {
     for (var type in CardType.values) type: 0,
   };
@@ -162,5 +160,4 @@ class ColorController extends ChangeNotifier {
   }
 
   int get total => _tapCounts.values.fold(0, (sum, value) => sum + value);
-
 }
