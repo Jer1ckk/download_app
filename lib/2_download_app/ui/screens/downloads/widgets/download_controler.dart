@@ -35,9 +35,9 @@ class DownloadController extends ChangeNotifier {
       _status = DownloadStatus.downloading;
       notifyListeners();
       for (int i = 0; i < 10; i++) {
+        await Future.delayed(const Duration(milliseconds: 1000));
         _progress += 0.1;
         notifyListeners();
-        await Future.delayed(const Duration(milliseconds: 1000));
       }
       _status = DownloadStatus.downloaded;
       notifyListeners();
